@@ -8,11 +8,9 @@
 #  - clicks / slot is rounded to the nearest click
 
 from optparse import OptionParser
-import copy
 import itertools
 import logging
 import math
-import pprint
 import random
 import sys
 
@@ -33,16 +31,6 @@ def iround(x):
     """Round x and return an int"""
     return int(round(x))
 
-def agent_slot(occupants, a_id, t):
-    """Return the slot agent with id a_id occupied in round t,
-    or -1 if a_id wasn't present in round t"""
-    agents = occupants[t]
-    if a_id in agents:
-        return agents.index(a_id)
-    else:
-        return -1
-
-
 def sim(config):
     # TODO: Create agents here
     agents = init_agents(config)
@@ -54,38 +42,18 @@ def sim(config):
     by_id = dict((a.id, a) for a in agents)
     agent_ids = [a.id for a in agents]
 
-    if (config.mechanism.lower() == 'gsp' or
-        config.mechanism.lower() == 'switch'):
-        mechanism = GSP
-    elif config.mechanism.lower() == 'vcg':
-        mechanism = VCG
-    else:
-        raise ValueError("mechanism must be one of 'gsp', 'vcg', or 'switch'")
-
-    reserve = config.reserve
-
     # Dictionaries : round # -> per_slot_list_of_whatever
-    slot_occupants = {}
-    slot_clicks = {}
-    per_click_payments = {}
-    slot_payments = {}
     values = {}
     bids = {}
 
-    history = History(bids, slot_occupants, slot_clicks,
-                      per_click_payments, slot_payments, n)
+    history = History(bids, n)
 
     def total_spent(agent_id, end):
         """
         Compute total amount spent by agent_id through (not including)
         round end.
         """
-        s = 0
-        for t in range(end):
-            slot = agent_slot(slot_occupants, agent_id, t)
-            if slot != -1:
-                s += slot_payments[t][slot]
-        return s
+        # TODO
 
     def run_round(top_slot_clicks, t):
         """ top_slot_clicks is the expected number of clicks in the top slot
