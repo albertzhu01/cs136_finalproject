@@ -4,7 +4,8 @@ import math
 import random
 import sys
 
-from foodbank import FoodBank
+from truthfulfoodbank import TruthfulFoodBank
+from bnefoodbank import BNEFoodBank
 
 from util import argmax_index
 
@@ -12,9 +13,7 @@ num_banks = 5
 num_days = 100
 num_items = 2
 
-banks = [FoodBank(id=_,goal_factor=1,budget=100) for _ in range(num_banks)]
-
-
+banks = [TruthfulFoodBank(id=_,goal_factor=1,budget=100) for _ in range(num_banks)]
 
 for _ in range(num_days):
     print(f"-------------DAY {_}-------------")
@@ -31,7 +30,7 @@ for _ in range(num_days):
         b.values.append(random.uniform(20,50))
 
     # Collect bids
-    bids = [b.bid() for b in banks]
+    bids = [b.bid(len(banks)) for b in banks]
 
     # Allocate food items
     total_spent = 0

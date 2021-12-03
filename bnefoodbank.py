@@ -3,7 +3,7 @@ import random
 import copy
 
 
-class FoodBank:
+class BNEFoodBank:
     def __init__(self, id, goal_factor=1, budget=100):
         self.id = id
         self.goal_factor = goal_factor
@@ -11,7 +11,7 @@ class FoodBank:
         self.utility = 0
         self.values = []
 
-    def bid(self):
+    def bid(self,num_banks):
         '''
         # This is hardcoded for 2 items: [perishable, non-perishable]. If there are more items, this will need to be changed
         if self.values[0] + self.values[1] > self.budget:
@@ -24,9 +24,9 @@ class FoodBank:
             return (self.values[0], self.values[1])
         '''
         
-        
         # This may work for more than 2 items
         bids = copy.deepcopy(self.values)
+        bids = [bid * (num_banks - 1)/num_banks for bid in bids]
         # If total value exceeds budget, prioritize the highest value items. 
         while sum(bids) > self.budget:
             min_nonzero = float("inf")
@@ -42,7 +42,6 @@ class FoodBank:
             else:
                 bids[index] -= sum(bids) - self.budget
             
-        print(bids)
         return bids
 
 
