@@ -4,7 +4,7 @@ import copy
 
 
 class TruthfulFoodBank:
-    def __init__(self, id, goal_factor=1, budget=100):
+    def __init__(self, id=None, goal_factor=1, budget=100):
         self.id = id
         self.goal_factor = goal_factor
         self.budget = budget
