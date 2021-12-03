@@ -12,7 +12,7 @@ num_banks = 2
 num_days = 10
 num_items = 2
 
-banks = [FoodBank(id, 1, 0) for id in range(num_banks)]
+banks = [FoodBank(id=id,goal_factor=1,budget=100) for id in range(num_banks)]
 
 for _ in range(num_days):
     # Allocate food items
