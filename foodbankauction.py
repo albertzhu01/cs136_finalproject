@@ -15,6 +15,12 @@ num_items = 2
 
 banks = [TruthfulFoodBank(id=_,goal_factor=1,budget=100) for _ in range(num_banks)]
 
+# list of goal factors for each bank in case it's convenient to access as a list
+goal_factors = [bank.goal_factor for bank in banks]
+
+# list of amount of food received by each bank
+food_received = [0] * num_banks
+
 for _ in range(num_days):
     print(f"-------------DAY {_}-------------")
     for b in banks:
@@ -38,6 +44,7 @@ for _ in range(num_days):
         winner_id = argmax_index([bid[i] for bid in bids])
         winning_bank = banks[winner_id]
         winning_bid = bids[winner_id][i]
+        food_received[winner_id] += 1
 
         if winning_bid > 0:
             print(f"Bank {winner_id} wins item {i} with a bid of {winning_bid}")
@@ -53,5 +60,7 @@ for _ in range(num_days):
             bank.budget += total_spent*(bank.goal_factor)/total_goal_factor
 
 # Print utilities
+print(f"-------------RESULTS-------------")
 for b in banks:
     print(f"Bank {b.id} utility: {b.utility}")
+    print(f"Bank {b.id} food: {food_received[b.id]}")

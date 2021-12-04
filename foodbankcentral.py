@@ -47,5 +47,7 @@ for _ in range(num_days):
         print(f"Bank {winner_id} is allocated item {i}")
 
 # Print utilities
+print(f"-------------RESULTS-------------")
 for b in banks:
     print(f"Bank {b.id} utility: {b.utility}")
+    print(f"Bank {b.id} food: {food_received[b.id]}")
