@@ -18,9 +18,14 @@ num_trials = 10
 utilities_all_trials = []
 food_received_all_trials = []
 
+banks = [TruthfulFoodBank(id=_,goal_factor=random.uniform(0.5,1.5),budget=100) for _ in range(num_banks)]
+
 for t in range(num_trials):
 
-    banks = [TruthfulFoodBank(id=_,goal_factor=1,budget=100) for _ in range(num_banks)]
+    # Reset banks' budgets and utilities
+    for b in banks:
+        b.budget = 100
+        b.utility = 0
 
     # list of goal factors for each bank in case it's convenient to access as a list
     goal_factors = [bank.goal_factor for bank in banks]
@@ -75,5 +80,6 @@ print(f"-------------RESULTS-------------")
 print(f"Number of trials: {num_trials}")
 
 for b in banks:
+    print(f"Bakn {b.id}'s goal factor: {b.goal_factor}")
     print(f"Bank {b.id}'s utility: {np.mean([u[b.id] for u in utilities_all_trials])} ({np.std([u[b.id] for u in utilities_all_trials])}) ")
     print(f"Bank {b.id}'s food received : {np.mean([f[b.id] for f in food_received_all_trials])} ({np.std([f[b.id] for f in food_received_all_trials])})")
