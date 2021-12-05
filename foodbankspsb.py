@@ -44,13 +44,13 @@ for _ in range(num_days):
         winner_id = argmax_index([bid[i] for bid in bids])
         winning_bank = banks[winner_id]
         winning_bid = bids[winner_id][i]
+        food_received[winner_id] += 1
 
         if winning_bid > 0:
             print(f"Bank {winner_id} wins item {i} with a bid of {winning_bid}")
             total_spent += winning_bid
             winning_bank.budget -= winning_bid
             winning_bank.utility += winning_bank.values[i]
-            food_received[winner_id] += 1
         else:
             print(f"No banks bid on item {i}")
         
