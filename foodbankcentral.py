@@ -3,6 +3,7 @@ import logging
 import math
 import random
 import sys
+import numpy as np
 
 from truthfulfoodbank import TruthfulFoodBank
 
@@ -11,43 +12,55 @@ from util import argmax_index
 num_banks = 5
 num_days = 100
 num_items = 2
+num_trials = 10
 
-banks = [TruthfulFoodBank(id=id,goal_factor=1,budget=100) for id in range(num_banks)]
+utilities_all_trials = []
+food_received_all_trials = []
 
-# list of goal factors for each bank
-goal_factors = [bank.goal_factor for bank in banks]
+for t in range(num_trials):
 
-# list of amount of food received by each bank
-food_received = [0] * num_banks
+    banks = [TruthfulFoodBank(id=id,goal_factor=1,budget=100) for id in range(num_banks)]
 
-for _ in range(num_days):
-    print(f"-------------DAY {_}-------------")
-    for b in banks:
-        b.values = []
-        # Perishable value
-        b.values.append(random.uniform(20, 30))
-        # Nonperishable value
-        b.values.append(random.uniform(20, 50))
+    # list of goal factors for each bank
+    goal_factors = [bank.goal_factor for bank in banks]
 
-    # Allocate food items
-    total_spent = 0
-    for i in range(num_items):
-        # The paper ranks banks by amount of food below the goal factor, so here I
-        # just used the ratio of food received to goal factor to rank banks for each
-        # item. Using difference of the two basically gives the same results so either
-        # one should be fine in the end if we do this.
-        ranking = [food - goal_f for food, goal_f in zip(food_received, goal_factors)]
-        sorted_banks = [bank for _, bank in sorted(zip(ranking, banks), key=lambda pair: pair[0])]
-        winner_id = banks.index(sorted_banks[0])
-        winning_bank = banks[winner_id]
-        food_received[winner_id] += 1
+    # list of amount of food received by each bank
+    food_received = [0] * num_banks
 
-        # utility increases by either the perishable value or nonperishable value
-        winning_bank.utility += winning_bank.values[i]
-        print(f"Bank {winner_id} is allocated item {i}")
+    for _ in range(num_days):
+        print(f"-------------DAY {_}-------------")
+        for b in banks:
+            b.values = []
+            # Perishable value
+            b.values.append(random.uniform(20, 30))
+            # Nonperishable value
+            b.values.append(random.uniform(20, 50))
 
-# Print utilities
+        # Allocate food items
+        total_spent = 0
+        for i in range(num_items):
+            # The paper ranks banks by amount of food below the goal factor, so here I
+            # just used the ratio of food received to goal factor to rank banks for each
+            # item. Using difference of the two basically gives the same results so either
+            # one should be fine in the end if we do this.
+            ranking = [food - goal_f for food, goal_f in zip(food_received, goal_factors)]
+            sorted_banks = [bank for _, bank in sorted(zip(ranking, banks), key=lambda pair: pair[0])]
+            winner_id = banks.index(sorted_banks[0])
+            winning_bank = banks[winner_id]
+            food_received[winner_id] += 1
+
+            # utility increases by either the perishable value or nonperishable value
+            winning_bank.utility += winning_bank.values[i]
+            print(f"Bank {winner_id} is allocated item {i}")
+
+    # Add utilities, food received to running list
+    utilities_all_trials.append([b.utility for b in banks])
+    food_received_all_trials.append(food_received)
+
+# Print results
 print(f"-------------RESULTS-------------")
+print(f"Number of trials: {num_trials}")
+
 for b in banks:
-    print(f"Bank {b.id} utility: {b.utility}")
-    print(f"Bank {b.id} food: {food_received[b.id]}")
+    print(f"Bank {b.id}'s utility: {np.mean([u[b.id] for u in utilities_all_trials])} ({np.std([u[b.id] for u in utilities_all_trials])}) ")
+    print(f"Bank {b.id}'s food received : {np.mean([f[b.id] for f in food_received_all_trials])} ({np.std([f[b.id] for f in food_received_all_trials])})")
