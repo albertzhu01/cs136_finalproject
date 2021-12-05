@@ -4,6 +4,7 @@ import math
 import random
 import sys
 import numpy as np
+import matplotlib.pyplot as plt
 
 from truthfulfoodbank import TruthfulFoodBank
 from bnefoodbank import BNEFoodBank
@@ -91,3 +92,17 @@ for b in banks:
     print(f"Bank {b.id}'s food received : {np.mean([f[b.id] for f in food_received_all_trials])} ({np.std([f[b.id] for f in food_received_all_trials])})")
 
 print(f"Average total food allocated: {np.sum(food_received_all_trials)}")
+
+plt.plot(
+    sorted(goal_factors),
+    sorted(np.sum(food_received_all_trials, axis=0)),
+    color="orange",
+    linestyle="--",
+    marker="o"
+)
+
+plt.title("Average Food Received vs. Goal Factor (SPSB Truthul)")
+plt.xlabel("Goal Factor")
+plt.ylabel("Average Amount of Food Received")
+# plt.savefig("SPSB_goalfactor.png")
+# plt.show()
