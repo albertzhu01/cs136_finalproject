@@ -43,9 +43,9 @@ for t in range(num_trials):
         for b in banks:
             b.values = []
             # Perishable value
-            b.values.append(random.uniform(20,30))
+            b.values.append(random.normalvariate(25, 3))
             # Nonperishable value
-            b.values.append(random.uniform(20,50))
+            b.values.append(random.normalvariate(35, 9))
 
         # Collect bids
         bids = [b.bid(len(banks)) for b in banks]
@@ -90,4 +90,4 @@ for b in banks:
     print(f"Bank {b.id}'s utility: {np.mean([u[b.id] for u in utilities_all_trials])} ({np.std([u[b.id] for u in utilities_all_trials])}) ")
     print(f"Bank {b.id}'s food received : {np.mean([f[b.id] for f in food_received_all_trials])} ({np.std([f[b.id] for f in food_received_all_trials])})")
 
-print(f"Average total food allocated: {np.mean(food_received_all_trials)}")
+print(f"Average total food allocated: {np.sum(food_received_all_trials)}")
