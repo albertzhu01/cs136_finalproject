@@ -79,3 +79,6 @@ for b in banks:
     print(f"Bank {b.id}'s utility: {np.mean([u[b.id] for u in utilities_all_trials])} ({np.std([u[b.id] for u in utilities_all_trials])}) ")
     print(f"Bank {b.id}'s food offered : {np.mean([f[b.id] for f in food_offered_all_trials])} ({np.std([f[b.id] for f in food_offered_all_trials])})")
     print(f"Bank {b.id}'s food received : {np.mean([f[b.id] for f in food_received_all_trials])} ({np.std([f[b.id] for f in food_received_all_trials])})")
+
+print(f"Total food allocated: {sum(food_received)}")
+print(f"Total food offered: {sum(food_offered)}")
