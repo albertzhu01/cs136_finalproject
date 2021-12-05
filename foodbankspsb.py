@@ -41,16 +41,22 @@ for _ in range(num_days):
     # Allocate food items
     total_spent = 0
     for i in range(num_items):
+        bids_i = [bid[i] for bid in bids]
+        bids_i.sort()
+        # print(bids_i)
         winner_id = argmax_index([bid[i] for bid in bids])
+        winning_bid = bids_i[-1]
+        # print(winner_id)
+        # print(winning_bid)
         winning_bank = banks[winner_id]
-        winning_bid = bids[winner_id][i]
-        food_received[winner_id] += 1
+        second_bid = bids_i[-2]
 
         if winning_bid > 0:
-            print(f"Bank {winner_id} wins item {i} with a bid of {winning_bid}")
-            total_spent += winning_bid
-            winning_bank.budget -= winning_bid
+            print(f"Bank {winner_id} wins item {i} with a bid of {winning_bid} and payment {second_bid}")
+            total_spent += second_bid
+            winning_bank.budget -= second_bid
             winning_bank.utility += winning_bank.values[i]
+            food_received[winner_id] += 1
         else:
             print(f"No banks bid on item {i}")
         
